@@ -1,0 +1,9 @@
+{
+  "name": "MegaFox Distribuição",
+  "short_name": "MegaFox",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#071a40",
+  "theme_color": "#071a40",
+  "icons": [{ "src": "/assets/img/logo.webp", "sizes": "150x150", "type": "image/webp" }]
+}
