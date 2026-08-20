@@ -40,4 +40,39 @@
     status.className = 'form-status ok';
     status.textContent = 'Demonstração: formulário preservado visualmente. O envio real será conectado ao backend na publicação de produção.';
   });
+
+  // Telemetria anônima da demonstração. Não envia IP, nome, e-mail ou localização.
+  const trackAccess = async () => {
+    try {
+      const visitorKey = 'megafox_visitor_id';
+      const sessionKey = 'megafox_session_id';
+      let visitorId = localStorage.getItem(visitorKey);
+      let sessionId = sessionStorage.getItem(sessionKey);
+
+      if (!visitorId) {
+        visitorId = crypto.randomUUID();
+        localStorage.setItem(visitorKey, visitorId);
+      }
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        sessionStorage.setItem(sessionKey, sessionId);
+      }
+
+      await fetch('https://odthqhyzrmjwynwpsdoc.supabase.co/functions/v1/megafox-track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          visitor_id: visitorId,
+          session_id: sessionId,
+          path: location.pathname,
+          referrer: document.referrer || null
+        })
+      });
+    } catch {
+      // O rastreamento jamais deve interferir na experiência do protótipo.
+    }
+  };
+
+  trackAccess();
 })();
